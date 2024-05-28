@@ -33,10 +33,10 @@ const ExpenseForm = ({ addExpense }) => {
     };
 
     const handleSubmit = (e) => {
-        e.preventDefault();
+        e.preventDefault(); // 폼의 기본 동작 중지
         addExpense(formData);
         setFormData({
-            date: '',
+            date, // 날짜는 초기화하지 않고 그대로 유지
             item: '',
             amount: '',
             description: '',
@@ -51,7 +51,7 @@ const ExpenseForm = ({ addExpense }) => {
     return (
         <form onSubmit={handleSubmit}>
             <InputContainer>
-                <div>
+                <InputWrapper>
                     <label htmlFor="date">날짜</label>
                     <input
                         type="date"
@@ -62,8 +62,8 @@ const ExpenseForm = ({ addExpense }) => {
                         required
                         placeholder="날짜를 선택하세요"
                     />
-                </div>
-                <div>
+                </InputWrapper>
+                <InputWrapper>
                     <label htmlFor="item">항목</label>
                     <input
                         type="text"
@@ -74,8 +74,8 @@ const ExpenseForm = ({ addExpense }) => {
                         required
                         placeholder="항목을 입력하세요"
                     />
-                </div>
-                <div>
+                </InputWrapper>
+                <InputWrapper>
                     <label htmlFor="amount">금액</label>
                     <input
                         type="number"
@@ -86,8 +86,8 @@ const ExpenseForm = ({ addExpense }) => {
                         required
                         placeholder="금액을 입력하세요"
                     />
-                </div>
-                <div>
+                </InputWrapper>
+                <InputWrapper>
                     <label htmlFor="description">내용</label>
                     <input
                         type="text"
@@ -98,18 +98,16 @@ const ExpenseForm = ({ addExpense }) => {
                         required
                         placeholder="내용을 입력하세요"
                     />
-                </div>
-
+                </InputWrapper>
                 <CustomButton type="submit">저장</CustomButton>
             </InputContainer>
-            <MonthSelector selectedMonth={selectedMonth} handleMonthClick={handleMonthClick} />
         </form>
     );
 };
 
 const InputContainer = styled.div`
     display: flex;
-    flex-direction: row; /* 가로 방향으로 아이템을 배치 */
+    flex-wrap: wrap; /* 가로 방향으로 아이템을 배치 */
     align-items: center;
     justify-content: center; /* 아이템을 가운데 정렬 */
     width: 49.5%; /* 너비를 더 넓게 설정 */
@@ -118,17 +116,19 @@ const InputContainer = styled.div`
     border: 1px solid black; /* 통으로 둘러싸는 테두리 스타일 */
     margin-bottom: 20px;
     margin-top: 40px;
+`;
 
-    & > div {
-        display: flex;
-        flex-direction: column; /* 세로 방향으로 아이템을 배치 */
-        align-items: flex-start; /* 아이템을 왼쪽 정렬 */
-        margin-right: 50px; /* 오른쪽 간격 설정 */
-    }
+const InputWrapper = styled.div`
+    display: flex;
+    flex-direction: column; /* 세로 방향으로 아이템을 배치 */
+    align-items: flex-start; /* 아이템을 왼쪽 정렬 */
+    margin: 10px; /* 간격 설정 */
+    flex: 1 1 200px; /* flex-grow, flex-shrink, flex-basis 설정으로 반응형 동작 추가 */
 
-    & input,
-    & button {
-        margin-top: 5px; /* 각각의 인풋과 버튼 위 여백 설정 */
+    & input {
+        margin-top: 5px; /* 각각의 인풋 위 여백 설정 */
+        width: 100%; /* 인풋 요소의 너비를 100%로 설정 */
+        box-sizing: border-box; /* padding과 border를 포함한 전체 너비 설정 */
     }
 
     & label {

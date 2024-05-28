@@ -14,7 +14,7 @@ const Home = () => {
     return (
         <div>
             <ExpenseForm addExpense={addExpense} />
-            <ExpenseList expenses={expenses.filter((expense) => expense.month === selectedMonth)} />
+            <ExpenseList />
         </div>
     );
 };
