@@ -2,27 +2,15 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import MonthSelector from './MonthSelector';
 
-const ExpenseForm = ({ addExpense }) => {
+const ExpenseForm = ({ addExpense, selectedMonth }) => {
     const [formData, setFormData] = useState({
-        date: '',
+        date: new Date(new Date().getFullYear(), selectedMonth - 1, 1).toISOString().split('T')[0], // 선택한 월의 첫째 날로 초기화
         item: '',
         amount: '',
         description: '',
     });
 
-    const { date, item, amount, description } = formData;
-    const [selectedMonth, setSelectedMonth] = useState(1); // 처음에는 1월로 설정
-
-    const handleMonthClick = (monthId) => {
-        setSelectedMonth(monthId);
-        const newDate = new Date();
-        newDate.setMonth(monthId - 1); // monthId는 1부터 시작하기 때문에 1을 빼줍니다.
-        newDate.setDate(1); // 해당 월의 첫째 날로 설정
-        setFormData({
-            ...formData,
-            date: newDate.toISOString().split('T')[0], // ISO 문자열로 변환하여 저장
-        });
-    };
+    const { item, amount, description } = formData;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -31,22 +19,28 @@ const ExpenseForm = ({ addExpense }) => {
             [name]: value,
         });
     };
-
     const handleSubmit = (e) => {
         e.preventDefault(); // 폼의 기본 동작 중지
         addExpense(formData);
-        setFormData({
-            date, // 날짜는 초기화하지 않고 그대로 유지
+        setFormData((prevData) => ({
+            ...prevData,
             item: '',
             amount: '',
             description: '',
-        });
+        }));
     };
 
     // 컴포넌트가 마운트될 때 실행되어 처음에는 1월로 설정
     useEffect(() => {
-        handleMonthClick(selectedMonth);
-    }, []);
+        const newDate = new Date();
+        newDate.setMonth(selectedMonth - 1); // selectedMonth는 1부터 시작하기 때문에 1을 빼줍니다.
+        newDate.setDate(1); // 해당 월의 첫째 날로 설정
+        const newDateString = newDate.toISOString().split('T')[0];
+        setFormData((prevData) => ({
+            ...prevData,
+            date: newDateString,
+        }));
+    }, [selectedMonth]);
 
     return (
         <form onSubmit={handleSubmit}>
@@ -57,7 +51,7 @@ const ExpenseForm = ({ addExpense }) => {
                         type="date"
                         id="date"
                         name="date"
-                        value={date}
+                        value={formData.date}
                         onChange={handleChange}
                         required
                         placeholder="날짜를 선택하세요"
